@@ -57,11 +57,12 @@ public class MainActivity extends AppCompatActivity {
             return true;
     }
 
+    // todo use binding
     private void initRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.contact_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
         ContactAdapter adapter = new ContactAdapter();
         adapter.setContacts(contactViewModel.getContacts());
-        recyclerView.setAdapter(new ContactAdapter());
+        recyclerView.setAdapter(adapter);
     }
 }

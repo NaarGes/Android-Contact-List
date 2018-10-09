@@ -28,8 +28,9 @@
             android:id="@+id/contact_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
-        <!--app:adapter="@{viewModel.adapter}"
-        app:data="@{viewModel.getContacts}"/>-->
-
+<!--
+            app:adapter="@{viewModel.adapter}"
+            app:data="@{viewModel.getContacts}"/>
+-->
     </LinearLayout>
 </layout>
