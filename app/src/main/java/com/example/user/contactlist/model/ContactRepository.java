@@ -20,7 +20,6 @@ public class ContactRepository {
 
     public List<Contact> fetchContacts() {
 
-        Contact contact = new Contact();
 
         Cursor cursor = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                 null, null, null,
@@ -33,7 +32,7 @@ public class ContactRepository {
                 String phoneNo = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                 String photoUri = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI));
 
-                Log.e("contact", "getAllContacts: " + name + " " + phoneNo + " " + photoUri);
+                Contact contact = new Contact();
                 contact.setName(name);
                 contact.setPhoneNumber(phoneNo);
                 contact.setPhotoUri(photoUri);

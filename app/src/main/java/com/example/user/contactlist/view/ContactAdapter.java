@@ -1,12 +1,12 @@
 package com.example.user.contactlist.view;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.example.user.contactlist.BR;
 import com.example.user.contactlist.R;
 import com.example.user.contactlist.databinding.ItemContactBinding;
 import com.example.user.contactlist.model.Contact;
@@ -17,6 +17,11 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
 
     private List<Contact> contacts;
     private ItemContactBinding binding;
+    private Context context;
+
+    public ContactAdapter(Context context) {
+        this.context = context;
+    }
 
     public void setContacts(List<Contact> contacts) {
         this.contacts = contacts;
@@ -26,8 +31,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
     @Override
     public ContactViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
-        binding = DataBindingUtil.inflate(LayoutInflater.from(viewGroup.getContext()), R.layout.item_contact,
-                viewGroup, false);
+        binding = DataBindingUtil.inflate(LayoutInflater.from(viewGroup.getContext()),
+                R.layout.item_contact, viewGroup, false);
         return new ContactViewHolder(binding);
     }
 
@@ -52,8 +57,10 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
         }
 
         void onBind(Contact contact) {
-            binding.setVariable(BR.contact, contact);
-//            binding.setContact(contact);
+            //binding.setVariable(BR.contact, contact);
+            binding.setContact(contact);
+            EventHandler handler = new EventHandler(context);
+            binding.setHandler(handler);
             binding.executePendingBindings();
         }
     }

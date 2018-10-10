@@ -27,7 +27,8 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/contact_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"/>
 <!--
             app:adapter="@{viewModel.adapter}"
             app:data="@{viewModel.getContacts}"/>

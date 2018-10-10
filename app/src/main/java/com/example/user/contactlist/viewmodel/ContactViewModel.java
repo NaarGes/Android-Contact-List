@@ -3,6 +3,7 @@ package com.example.user.contactlist.viewmodel;
 import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.ObservableArrayList;
+import android.util.Log;
 
 import com.example.user.contactlist.model.Contact;
 import com.example.user.contactlist.model.ContactRepository;

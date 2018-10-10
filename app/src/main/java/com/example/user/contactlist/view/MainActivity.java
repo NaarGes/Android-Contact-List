@@ -8,8 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import com.example.user.contactlist.R;
 import com.example.user.contactlist.databinding.ActivityMainBinding;
@@ -18,6 +17,7 @@ import com.example.user.contactlist.viewmodel.ContactViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
+    private ActivityMainBinding binding;
     private ContactViewModel contactViewModel;
     public final int REQUEST_CODE = 1;
 
@@ -25,13 +25,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         contactViewModel = new ContactViewModel(getApplicationContext());
         binding.setViewModel(contactViewModel);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!hasPhoneContactsPermission(Manifest.permission.READ_CONTACTS))
                 requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_CODE);
+            else
+                initRecyclerView();
             } else {
             initRecyclerView();
         }
@@ -44,7 +46,10 @@ public class MainActivity extends AppCompatActivity {
 
         switch (requestCode) {
             case REQUEST_CODE:
-                initRecyclerView();
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    initRecyclerView();
+                else
+                    Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -59,10 +64,8 @@ public class MainActivity extends AppCompatActivity {
 
     // todo use binding
     private void initRecyclerView() {
-        RecyclerView recyclerView = findViewById(R.id.contact_recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
-        ContactAdapter adapter = new ContactAdapter();
+        ContactAdapter adapter = new ContactAdapter(this);
         adapter.setContacts(contactViewModel.getContacts());
-        recyclerView.setAdapter(adapter);
+        binding.contactRecyclerView.setAdapter(adapter);
     }
 }
