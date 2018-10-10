@@ -25,6 +25,7 @@ public class ContactRepository {
 
     public void saveContactsInDataBase() {
 
+        // todo manage database
         contacts = database.contactDao().getContacts();
         if (contacts.size() == 0) {
             Cursor cursor = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,

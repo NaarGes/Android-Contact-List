@@ -12,11 +12,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.user.contactlist.R;
-import com.example.user.contactlist.data.local.AppDatabase;
 import com.example.user.contactlist.data.model.Contact;
 import com.example.user.contactlist.viewmodel.ContactViewModel;
 
@@ -37,9 +35,9 @@ public class MainActivity extends AppCompatActivity {
             if (!hasPhoneContactsPermission(Manifest.permission.READ_CONTACTS))
                 requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_CODE);
             else
-                initRecyclerView();
+                init();
             } else {
-            initRecyclerView();
+            init();
         }
     }
 
@@ -51,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                    initRecyclerView();
+                    init();
                 else
                     Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
         }
@@ -66,24 +64,30 @@ public class MainActivity extends AppCompatActivity {
             return true;
     }
 
-    private void initRecyclerView() {
+    private void init() {
 
-        RecyclerView recyclerView = findViewById(R.id.contact_recycler_view);
+        // fixme doesn't load contacts when orientation changes or get permission
+        final RecyclerView recyclerView = findViewById(R.id.contact_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
         final ContactAdapter adapter = new ContactAdapter(this);
-        recyclerView.setAdapter(adapter);
 
         contactViewModel = ViewModelProviders.of(this).get(ContactViewModel.class);
         contactViewModel.setup(this);
+        contactViewModel.SetLiveDataString("this is live data");
+
         contactViewModel.getContacts().observe(MainActivity.this, new Observer<List<Contact>>() {
             @Override
             public void onChanged(@Nullable List<Contact> contacts) {
+                recyclerView.setAdapter(adapter);
                 adapter.setContacts(contacts);
             }
         });
 
-
-        AppDatabase database = AppDatabase.getAppDatabase(this);
-        Log.e("contacts in database", "onCreate: "+database.contactDao().getAllContacts() );
+        contactViewModel.getLiveDataString().observe(MainActivity.this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
