@@ -1,53 +1,37 @@
-<layout xmlns:bind="http://schemas.android.com/apk/res-auto">
-    <data>
-        <import type="android.view.View"/>
-        <variable
-            name="contact"
-            type="com.example.user.contactlist.data.model.Contact"/>
-        <variable
-            name="handler"
-            type="com.example.user.contactlist.view.EventHandler"/>
-    </data>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <android.support.v7.widget.CardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="@{() -> handler.OnContactClick(contact)}">
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_margin="@dimen/_10dp">
+
+        <ImageView
+            android:id="@+id/contact_photo"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="@dimen/_10dp"
+            android:layout_marginBottom="@dimen/_10dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:layout_margin="@dimen/_10dp">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/contact_photo"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="@dimen/_10dp"
-                android:layout_marginBottom="@dimen/_10dp"
-                bind:photoUri="@{contact.getPhotoUri}"/>
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/contact_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:padding="@dimen/_10dp"/>
 
-                <TextView
-                    android:id="@+id/contact_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/_10dp"
-                    android:text="@{contact.getName}"/>
-
-                <TextView
-                    android:id="@+id/contact_number"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/_10dp"
-                    android:text="@{contact.getPhoneNumber}"/>
-            </LinearLayout>
+            <TextView
+                android:id="@+id/contact_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_10dp"/>
         </LinearLayout>
-    </android.support.v7.widget.CardView>
-</layout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

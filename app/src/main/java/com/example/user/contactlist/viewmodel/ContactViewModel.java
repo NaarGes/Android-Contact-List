@@ -1,26 +1,36 @@
 package com.example.user.contactlist.viewmodel;
 
+import android.annotation.SuppressLint;
+import android.app.Application;
+import android.arch.lifecycle.AndroidViewModel;
+import android.arch.lifecycle.LiveData;
 import android.content.Context;
-import android.databinding.BaseObservable;
-import android.databinding.ObservableArrayList;
 
+import com.example.user.contactlist.data.local.AppDatabase;
 import com.example.user.contactlist.data.model.Contact;
 import com.example.user.contactlist.data.ContactRepository;
 
 import java.util.List;
 
-public class ContactViewModel extends BaseObservable {
+public class ContactViewModel extends AndroidViewModel {
 
-    private ObservableArrayList<Contact> contacts;
-    private ContactRepository repository;
+    @SuppressLint("StaticFieldLeak")
+    private Context context;
+    private AppDatabase database;
 
-    public ContactViewModel(Context context) {
-        contacts = new ObservableArrayList<>();
-        repository = new ContactRepository(context);
+    public ContactViewModel(Application application) {
+        super(application);
     }
 
-    public List<Contact> getContacts() {
-        contacts.addAll(repository.fetchContacts());
-        return contacts;
+    public void setup(Context context) {
+        this.context = context;
+        database = AppDatabase.getAppDatabase(context);
+        ContactRepository repository = new ContactRepository(context, database);
+        repository.saveContactsInDataBase();
+    }
+
+    public LiveData<List<Contact>> getContacts() {
+
+        return database.contactDao().getAllContacts();
     }
 }

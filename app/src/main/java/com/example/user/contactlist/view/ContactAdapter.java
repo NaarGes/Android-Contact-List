@@ -1,14 +1,17 @@
 package com.example.user.contactlist.view;
 
 import android.content.Context;
-import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.user.contactlist.R;
-import com.example.user.contactlist.databinding.ItemContactBinding;
 import com.example.user.contactlist.data.model.Contact;
 
 import java.util.List;
@@ -16,7 +19,6 @@ import java.util.List;
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactViewHolder> {
 
     private List<Contact> contacts;
-    private ItemContactBinding binding;
     private Context context;
 
     public ContactAdapter(Context context) {
@@ -31,9 +33,9 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
     @Override
     public ContactViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
-        binding = DataBindingUtil.inflate(LayoutInflater.from(viewGroup.getContext()),
-                R.layout.item_contact, viewGroup, false);
-        return new ContactViewHolder(binding);
+        View result = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_contact,
+                viewGroup, false);
+        return new ContactViewHolder(result);
     }
 
     @Override
@@ -50,18 +52,21 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
 
     class ContactViewHolder extends RecyclerView.ViewHolder {
 
-        private final ItemContactBinding binding;
-        ContactViewHolder(ItemContactBinding itemContactBinding) {
-            super(itemContactBinding.getRoot());
-            this.binding = itemContactBinding;
+        private TextView name, phoneNo;
+        private ImageView photo;
+
+        ContactViewHolder(View itemView) {
+            super(itemView);
+            name = itemView.findViewById(R.id.contact_name);
+            phoneNo = itemView.findViewById(R.id.contact_number);
+            photo = itemView.findViewById(R.id.contact_photo);
         }
 
         void onBind(Contact contact) {
-            //binding.setVariable(BR.contact, contact);
-            binding.setContact(contact);
-            EventHandler handler = new EventHandler(context);
-            binding.setHandler(handler);
-            binding.executePendingBindings();
+
+            name.setText(contact.getName());
+            phoneNo.setText(contact.getPhoneNumber());
+            Glide.with(itemView).load(contact.getPhotoUri()).apply(RequestOptions.circleCropTransform()).into(photo);
         }
     }
 }

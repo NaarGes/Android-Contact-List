@@ -1,35 +1,37 @@
 package com.example.user.contactlist.view;
 
 import android.Manifest;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.pm.PackageManager;
-import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.example.user.contactlist.R;
 import com.example.user.contactlist.data.local.AppDatabase;
-import com.example.user.contactlist.databinding.ActivityMainBinding;
+import com.example.user.contactlist.data.model.Contact;
 import com.example.user.contactlist.viewmodel.ContactViewModel;
+
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private ActivityMainBinding binding;
     private ContactViewModel contactViewModel;
     public final int REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        contactViewModel = new ContactViewModel(getApplicationContext());
-        binding.setViewModel(contactViewModel);
+        setContentView(R.layout.activity_main);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!hasPhoneContactsPermission(Manifest.permission.READ_CONTACTS))
@@ -64,14 +66,24 @@ public class MainActivity extends AppCompatActivity {
             return true;
     }
 
-    // todo use binding
     private void initRecyclerView() {
-        ContactAdapter adapter = new ContactAdapter(this);
-        adapter.setContacts(contactViewModel.getContacts());
-        binding.contactRecyclerView.setAdapter(adapter);
+
+        RecyclerView recyclerView = findViewById(R.id.contact_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
+        final ContactAdapter adapter = new ContactAdapter(this);
+        recyclerView.setAdapter(adapter);
+
+        contactViewModel = ViewModelProviders.of(this).get(ContactViewModel.class);
+        contactViewModel.setup(this);
+        contactViewModel.getContacts().observe(MainActivity.this, new Observer<List<Contact>>() {
+            @Override
+            public void onChanged(@Nullable List<Contact> contacts) {
+                adapter.setContacts(contacts);
+            }
+        });
 
 
         AppDatabase database = AppDatabase.getAppDatabase(this);
-        Log.e("contacts in database", "onCreate: "+database.contactDao().getContact() );
+        Log.e("contacts in database", "onCreate: "+database.contactDao().getAllContacts() );
     }
 }
