@@ -1,9 +1,12 @@
-package com.example.user.contactlist.model;
+package com.example.user.contactlist.data;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
-import android.util.Log;
+
+import com.example.user.contactlist.data.local.AppDatabase;
+import com.example.user.contactlist.data.local.ContactEntity;
+import com.example.user.contactlist.data.model.Contact;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,14 +15,15 @@ public class ContactRepository {
 
     private Context context;
     private List<Contact> contacts;
+    private AppDatabase database;
 
     public ContactRepository(Context context) {
         this.context = context;
         contacts = new ArrayList<>();
+        database = AppDatabase.getAppDatabase(context);
     }
 
     public List<Contact> fetchContacts() {
-
 
         Cursor cursor = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                 null, null, null,
@@ -38,7 +42,11 @@ public class ContactRepository {
                 contact.setPhotoUri(photoUri);
 
                 contacts.add(contact);
-
+                ContactEntity contactEntity = new ContactEntity();
+                contactEntity.setName(contact.getName());
+                contactEntity.setPhoneNo(contact.getPhoneNumber());
+                contactEntity.setPhotoUri(contact.getPhotoUri());
+                database.contactDao().insert(contactEntity);
             }
         }
         if (cursor != null) {

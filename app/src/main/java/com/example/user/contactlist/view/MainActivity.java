@@ -8,9 +8,11 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.user.contactlist.R;
+import com.example.user.contactlist.data.local.AppDatabase;
 import com.example.user.contactlist.databinding.ActivityMainBinding;
 import com.example.user.contactlist.viewmodel.ContactViewModel;
 
@@ -67,5 +69,9 @@ public class MainActivity extends AppCompatActivity {
         ContactAdapter adapter = new ContactAdapter(this);
         adapter.setContacts(contactViewModel.getContacts());
         binding.contactRecyclerView.setAdapter(adapter);
+
+
+        AppDatabase database = AppDatabase.getAppDatabase(this);
+        Log.e("contacts in database", "onCreate: "+database.contactDao().getContact() );
     }
 }

@@ -5,7 +5,7 @@ import android.databinding.BaseObservable;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.user.contactlist.model.Contact;
+import com.example.user.contactlist.data.model.Contact;
 
 public class EventHandler extends BaseObservable {
 

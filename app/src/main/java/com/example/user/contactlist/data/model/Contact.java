@@ -1,6 +1,9 @@
-package com.example.user.contactlist.model;
+package com.example.user.contactlist.data.model;
 
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.databinding.BindingAdapter;
@@ -11,8 +14,15 @@ import com.bumptech.glide.request.RequestOptions;
 
 public class Contact extends BaseObservable {
 
+    /*@PrimaryKey(autoGenerate = true)
+    private int id;*/
     private String name;
+    /*@PrimaryKey
+    @ColumnInfo(name = "phone_number")*/
     private String phoneNumber;
+/*
+    @ColumnInfo(name = "photo_uri")
+*/
     private String photoUri;
 
     @Bindable

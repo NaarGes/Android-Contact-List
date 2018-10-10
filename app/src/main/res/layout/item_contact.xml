@@ -3,7 +3,7 @@
         <import type="android.view.View"/>
         <variable
             name="contact"
-            type="com.example.user.contactlist.model.Contact"/>
+            type="com.example.user.contactlist.data.model.Contact"/>
         <variable
             name="handler"
             type="com.example.user.contactlist.view.EventHandler"/>

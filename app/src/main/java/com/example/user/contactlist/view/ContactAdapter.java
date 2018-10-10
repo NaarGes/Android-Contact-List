@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import com.example.user.contactlist.R;
 import com.example.user.contactlist.databinding.ItemContactBinding;
-import com.example.user.contactlist.model.Contact;
+import com.example.user.contactlist.data.model.Contact;
 
 import java.util.List;
 
