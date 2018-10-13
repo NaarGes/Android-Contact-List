@@ -22,6 +22,8 @@ public interface ContactDao {
     @Query("SELECT * FROM contact")
     List<Contact> getContacts();
 
+    @Query("SELECT * FROM contact WHERE phone_number = :phoneNo")
+    Contact contains(String phoneNo);
 
     @Insert(onConflict = REPLACE)
     void insert(Contact contact);

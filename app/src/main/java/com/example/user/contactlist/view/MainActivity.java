@@ -18,9 +18,15 @@ public class MainActivity extends AppCompatActivity {
             public void goToGrid() {
 
                 GridContactFragment gridContactFragment = GridContactFragment.newInstance();
-                getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, gridContactFragment).commit();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, gridContactFragment)
+                        .addToBackStack(gridContactFragment.getTag())
+                        .commit();
             }
         });
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, linearContactFragment).commit();
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, linearContactFragment)
+                .commit();
     }
 }

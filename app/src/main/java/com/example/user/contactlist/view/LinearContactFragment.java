@@ -27,7 +27,6 @@ import java.util.List;
 
 public class LinearContactFragment extends Fragment {
 
-    private ContactViewModel contactViewModel;
     public final int REQUEST_CODE = 1;
     private View view;
     private TransferInterface listener;
@@ -108,12 +107,11 @@ public class LinearContactFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
         final ContactAdapter adapter = new ContactAdapter();
 
-        contactViewModel = ViewModelProviders.of(this).get(ContactViewModel.class);
-        contactViewModel.setup(getContext());
-
+        ContactViewModel contactViewModel = ViewModelProviders.of(getActivity()).get(ContactViewModel.class);
+        contactViewModel.setup();
         contactViewModel.SetLiveDataString("this is live data");
 
-        contactViewModel.getContacts().observe(LinearContactFragment.this, new Observer<List<Contact>>() {
+        contactViewModel.getContacts().observe(getActivity(), new Observer<List<Contact>>() {
             @Override
             public void onChanged(@Nullable List<Contact> contacts) {
                 recyclerView.setAdapter(adapter);
@@ -121,11 +119,12 @@ public class LinearContactFragment extends Fragment {
             }
         });
 
-        contactViewModel.getLiveDataString().observe(LinearContactFragment.this, new Observer<String>() {
+        // todo toast increase
+        /*contactViewModel.getLiveDataString().observe(getActivity(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
     }
 }

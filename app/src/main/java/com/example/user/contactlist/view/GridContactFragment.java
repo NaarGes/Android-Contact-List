@@ -51,10 +51,9 @@ public class GridContactFragment extends Fragment {
         recyclerView.setLayoutManager(new GridLayoutManager(recyclerView.getContext(), 2));
         final ContactAdapter adapter = new ContactAdapter();
 
-        ContactViewModel contactViewModel = ViewModelProviders.of(this).get(ContactViewModel.class);
-        contactViewModel.setup(getContext());
+        ContactViewModel contactViewModel = ViewModelProviders.of(getActivity()).get(ContactViewModel.class);
 
-        contactViewModel.getContacts().observe(GridContactFragment.this, new Observer<List<Contact>>() {
+        contactViewModel.getContacts().observe(getActivity(), new Observer<List<Contact>>() {
             @Override
             public void onChanged(@Nullable List<Contact> contacts) {
                 recyclerView.setAdapter(adapter);

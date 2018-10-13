@@ -61,7 +61,16 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
 
             name.setText(contact.getName());
             phoneNo.setText(contact.getPhoneNumber());
-            Glide.with(itemView).load(contact.getPhotoUri()).apply(RequestOptions.circleCropTransform()).into(photo);
+            if (contact.getPhotoUri() != null)
+                Glide.with(itemView)
+                        .load(contact.getPhotoUri())
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(photo);
+            else
+                Glide.with(itemView)
+                .load(R.drawable.ic_business_card_of_a_woman)
+                .apply(RequestOptions.circleCropTransform())
+                .into(photo);
         }
     }
 }

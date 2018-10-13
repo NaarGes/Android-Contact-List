@@ -5,7 +5,6 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.content.Context;
 
 import com.example.user.contactlist.data.local.AppDatabase;
 import com.example.user.contactlist.data.model.Contact;
@@ -18,22 +17,25 @@ public class ContactViewModel extends AndroidViewModel {
     @SuppressLint("StaticFieldLeak")
     private AppDatabase database;
     private MutableLiveData<String> liveDataString;
+    private LiveData<List<Contact>> contacts;
+    private ContactRepository repository;
 
     public ContactViewModel(Application application) {
         super(application);
-    }
-
-    public void setup(Context context) {
-
-        database = AppDatabase.getAppDatabase(context);
-        ContactRepository repository = new ContactRepository(context, database);
+        database = AppDatabase.getAppDatabase(application);
+        repository = new ContactRepository(application, database);
         liveDataString = new MutableLiveData<>();
         repository.saveContactsInDataBase();
     }
 
+    public void setup() {
+
+        contacts = repository.getContacts();
+    }
+
     public LiveData<List<Contact>> getContacts() {
 
-        return database.contactDao().getAllContacts();
+        return contacts;
     }
 
     public void SetLiveDataString(String newString) {
