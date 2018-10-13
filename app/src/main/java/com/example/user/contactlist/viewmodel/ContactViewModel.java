@@ -16,7 +16,6 @@ import java.util.List;
 public class ContactViewModel extends AndroidViewModel {
 
     @SuppressLint("StaticFieldLeak")
-    private Context context;
     private AppDatabase database;
     private MutableLiveData<String> liveDataString;
 
@@ -26,7 +25,6 @@ public class ContactViewModel extends AndroidViewModel {
 
     public void setup(Context context) {
 
-        this.context = context;
         database = AppDatabase.getAppDatabase(context);
         ContactRepository repository = new ContactRepository(context, database);
         liveDataString = new MutableLiveData<>();

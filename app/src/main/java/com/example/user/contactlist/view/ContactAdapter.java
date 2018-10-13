@@ -19,11 +19,6 @@ import java.util.List;
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactViewHolder> {
 
     private List<Contact> contacts;
-    private Context context;
-
-    public ContactAdapter(Context context) {
-        this.context = context;
-    }
 
     public void setContacts(List<Contact> contacts) {
         this.contacts = contacts;
