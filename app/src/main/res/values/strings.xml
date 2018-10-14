@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Contact List</string>
+    <string name="permission_denied">permission denied</string>
+    <string name="live_data_message">this is live data</string>
 </resources>

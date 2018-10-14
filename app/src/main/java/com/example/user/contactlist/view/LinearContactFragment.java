@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,22 +25,18 @@ import com.example.user.contactlist.viewmodel.ContactViewModel;
 
 public class LinearContactFragment extends Fragment {
 
+    private static TransferInterface listener;
     public final int REQUEST_CODE = 1;
     private View view;
-    private TransferInterface listener;
 
     public LinearContactFragment() {
 
     }
 
-    public void setListener(TransferInterface listener) {
-        this.listener = listener;
-    }
-
-    public static LinearContactFragment newInstance() {
+    public static LinearContactFragment newInstance(TransferInterface transferInterface) {
 
         Bundle args = new Bundle();
-
+        listener = transferInterface;
         LinearContactFragment fragment = new LinearContactFragment();
         fragment.setArguments(args);
         return fragment;
@@ -80,7 +77,7 @@ public class LinearContactFragment extends Fragment {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                     init(view);
                 else
-                    Toast.makeText(getContext(), "permission denied", Toast.LENGTH_LONG).show();
+                    toast(getString(R.string.permission_denied));
         }
     }
 
@@ -101,15 +98,17 @@ public class LinearContactFragment extends Fragment {
 
         final ContactViewModel contactViewModel = ViewModelProviders.of(getActivity()).get(ContactViewModel.class);
         contactViewModel.setup();
-        contactViewModel.SetLiveDataString("this is live data");
+        contactViewModel.SetLiveDataString(getString(R.string.live_data_message));
 
         contactViewModel.getContacts().observe(this, contacts -> {
             recyclerView.setAdapter(adapter);
             adapter.setContacts(contacts);
         });
 
-        contactViewModel.getLiveDataString().observe(this, s -> {
-            Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
-        });
+        contactViewModel.getLiveDataString().observe(this, this::toast);
+    }
+
+    private void toast(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 }

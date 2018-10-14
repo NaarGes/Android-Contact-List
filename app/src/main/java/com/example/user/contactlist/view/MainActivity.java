@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import com.example.user.contactlist.R;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TransferInterface {
 
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
@@ -19,22 +19,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        fragmentManager = getSupportFragmentManager();
+        fragmentTransaction = fragmentManager.beginTransaction();
 
-        // fixme save state has problem
-        if (savedInstanceState == null) {
-            fragmentManager = getSupportFragmentManager();
-            fragmentTransaction = fragmentManager.beginTransaction();
+        linearContactFragment = LinearContactFragment.newInstance(this);
 
-            linearContactFragment = LinearContactFragment.newInstance();
-            linearContactFragment.setListener(() -> goToGridFragment());
+        if (findViewById(R.id.fragment_container) != null)
+            if (savedInstanceState == null) {
 
-            if (!linearContactFragment.isVisible())
-                fragmentTransaction.add(R.id.fragment_container, linearContactFragment);
-            if (fragmentManager.findFragmentByTag(linearContactFragment.getTag()) != null)
-                fragmentTransaction.disallowAddToBackStack();
-            else
-                fragmentTransaction.addToBackStack(linearContactFragment.getTag());
-            fragmentTransaction.commit();
+                if (!linearContactFragment.isVisible())
+                    fragmentTransaction.replace(R.id.fragment_container, linearContactFragment);
+                if (fragmentManager.findFragmentByTag(linearContactFragment.getTag()) != null)
+                    fragmentTransaction.disallowAddToBackStack();
+                else
+                    fragmentTransaction.addToBackStack(linearContactFragment.getTag());
+                fragmentTransaction.commit();
         }
     }
 
@@ -47,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
+        FragmentManager fragmentManager = getSupportFragmentManager();
         int fragments = fragmentManager.getBackStackEntryCount();
         if (fragments == 1) {
             finish();
@@ -59,7 +59,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void goToGridFragment() {
+    @Override
+    public void goToGrid() {
         GridContactFragment gridContactFragment = GridContactFragment.newInstance();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, gridContactFragment)
