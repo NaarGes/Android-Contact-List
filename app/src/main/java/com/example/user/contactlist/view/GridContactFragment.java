@@ -1,7 +1,5 @@
 package com.example.user.contactlist.view;
 
-
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,12 +10,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.user.contactlist.R;
-import com.example.user.contactlist.data.model.Contact;
 import com.example.user.contactlist.viewmodel.ContactViewModel;
-
-import java.util.List;
 
 
 public class GridContactFragment extends Fragment {
@@ -53,12 +49,13 @@ public class GridContactFragment extends Fragment {
 
         ContactViewModel contactViewModel = ViewModelProviders.of(getActivity()).get(ContactViewModel.class);
 
-        contactViewModel.getContacts().observe(getActivity(), new Observer<List<Contact>>() {
-            @Override
-            public void onChanged(@Nullable List<Contact> contacts) {
-                recyclerView.setAdapter(adapter);
-                adapter.setContacts(contacts);
-            }
+        contactViewModel.getContacts().observe(this, contacts -> {
+            recyclerView.setAdapter(adapter);
+            adapter.setContacts(contacts);
         });
+
+        contactViewModel.getLiveDataString().observe(this, s ->
+                Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show());
+
     }
 }

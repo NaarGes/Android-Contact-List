@@ -2,7 +2,6 @@ package com.example.user.contactlist.view;
 
 
 import android.Manifest;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -20,10 +19,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.user.contactlist.R;
-import com.example.user.contactlist.data.model.Contact;
 import com.example.user.contactlist.viewmodel.ContactViewModel;
 
-import java.util.List;
 
 public class LinearContactFragment extends Fragment {
 
@@ -70,12 +67,7 @@ public class LinearContactFragment extends Fragment {
         }
 
         Button grid = view.findViewById(R.id.grid_btn);
-        grid.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.goToGrid();
-            }
-        });
+        grid.setOnClickListener(v -> listener.goToGrid());
     }
 
     @Override
@@ -107,24 +99,17 @@ public class LinearContactFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
         final ContactAdapter adapter = new ContactAdapter();
 
-        ContactViewModel contactViewModel = ViewModelProviders.of(getActivity()).get(ContactViewModel.class);
+        final ContactViewModel contactViewModel = ViewModelProviders.of(getActivity()).get(ContactViewModel.class);
         contactViewModel.setup();
         contactViewModel.SetLiveDataString("this is live data");
 
-        contactViewModel.getContacts().observe(getActivity(), new Observer<List<Contact>>() {
-            @Override
-            public void onChanged(@Nullable List<Contact> contacts) {
-                recyclerView.setAdapter(adapter);
-                adapter.setContacts(contacts);
-            }
+        contactViewModel.getContacts().observe(this, contacts -> {
+            recyclerView.setAdapter(adapter);
+            adapter.setContacts(contacts);
         });
 
-        // todo toast increase
-        /*contactViewModel.getLiveDataString().observe(getActivity(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
-            }
-        });*/
+        contactViewModel.getLiveDataString().observe(this, s -> {
+            Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
+        });
     }
 }
